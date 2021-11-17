@@ -9,16 +9,12 @@ from aws_cdk import (
 # being updated to use `cdk`.  You may delete this import if you don't need it.
 from aws_cdk import core
 
+from . import lock_service
+
 
 class VedaTestStack(cdk.Stack):
 
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # The code that defines your stack goes here
-
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "VedaTestQueue",
-        #     visibility_timeout=cdk.Duration.seconds(300),
-        # )
+        lock_service.LockService(self, "Locks")

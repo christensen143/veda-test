@@ -1,58 +1,54 @@
+# This is a sample CDK project
 
-# Welcome to your CDK Python project!
+This project builds an api with Lambdas to do the following:
 
-This is a blank project for Python development with CDK.
+- GET - List of all locks
+- GET /{id} - Information about a specific lock
+- POST /{id} - Create a lock with the name provided in the path
+- DELETE /{id} - Delete the lock specified in the path
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+### Example api calls:
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
-
-To manually create a virtualenv on MacOS and Linux:
+Get all locks:
 
 ```
-$ python3 -m venv .venv
+curl -X GET https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod
+{"locks":["bar","foo","hello"]}
 ```
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+Get information about a specific lock:
 
 ```
-$ source .venv/bin/activate
+curl -X GET https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello
+"hello created: Wed Nov 17 2021 21:29:31 GMT+0000 (Coordinated Universal Time)"
 ```
 
-If you are a Windows platform, you would activate the virtualenv like this:
+Create a new lock:
 
 ```
-% .venv\Scripts\activate.bat
+curl -X POST https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello
+The lock hello acquired.
 ```
 
-Once the virtualenv is activated, you can install the required dependencies.
+Attempt to create a lock that is already taken:
 
 ```
-$ pip install -r requirements.txt
+curl -X POST https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello
+Lock hello is in-use.
 ```
 
-At this point you can now synthesize the CloudFormation template for this code.
+Delete a lock:
 
 ```
-$ cdk synth
+curl -X DELETE https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello
+Successfully deleted lock hello.
 ```
 
-To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
+Attempt to delete a lock that does not exist:
 
-## Useful commands
+```
+curl -X DELETE https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello
+Lock hello does not exist.
+```
 
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
+This project is based heavily on the AWS example at this link https://docs.aws.amazon.com/cdk/latest/guide/serverless_example.html
